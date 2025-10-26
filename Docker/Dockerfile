@@ -14,7 +14,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 8001
+EXPOSE 8000
 RUN chmod +x entrypoint-dev.sh
 
 ENTRYPOINT ["./entrypoint-dev.sh"]
