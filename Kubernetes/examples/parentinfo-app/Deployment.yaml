@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: django
-        image: ghcr.io/ruchany13/parentinfo:0.2
+        image: ghcr.io/ruchany13/parentinfo:0.2 # You can change this to your desired image
         imagePullPolicy: Always
         envFrom:
           - secretRef:
@@ -28,6 +28,6 @@ spec:
               name: ParentInfoPostgresSecret
         ports:
         - containerPort: 8000
-      imagePullSecrets:
+      imagePullSecrets: # Reference to the secret for pulling images from private registry. If public, this can be omitted.
         - name: RegistryCredentials
 

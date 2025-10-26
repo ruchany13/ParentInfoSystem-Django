@@ -3,7 +3,7 @@ kind: Cluster
 metadata:
   name: ParentInfoCluster
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Ensure secrets are created before the cluster
+    argocd.argoproj.io/sync-wave: "2" # Ensure secrets are created before the cluster on ArgoCD
   namespace: parentinfo
 spec:
   description: "CNPG Cluster for Parent Info Application"
