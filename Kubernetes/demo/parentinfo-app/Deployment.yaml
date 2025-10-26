@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ParentInfoApp
+  name: parentinfo-app
   namespace: parentinfo
   labels:
-    app: ParentInfoApp
+    app: parentinfo-app
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: ParentInfoApp
+      app: parentinfo-app
   template:
     metadata:
       labels:
-        app: ParentInfoApp
+        app: parentinfo-app
     spec:
       containers:
       - name: django
@@ -21,11 +21,11 @@ spec:
         imagePullPolicy: Always
         envFrom:
           - secretRef:
-              name: ParentInfoR2Secret
+              name: parentinfo-r2-secret
           - secretRef:
-              name: ParentInfoDjangoSecret
+              name: parentinfo-django-secret
           - secretRef:
-              name: ParentInfoPostgresSecret
+              name: parentinfo-postgres-secret
         ports:
         - containerPort: 8000
       imagePullSecrets:
