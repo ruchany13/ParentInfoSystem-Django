@@ -11,32 +11,45 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+from django.core.management.utils import get_random_secret_key
+from storages.backends.s3boto3 import S3Boto3Storage
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-s11y48m((tb)dyd&m6v58hyz%dc*@ev@91jt(3dv4v(-l1$nut'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
+allowed_hosts_string = os.environ.get('DJANGO_ALLOWED_HOSTS') 
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_string.split(',')]
 
+# ----- CSRF trusted origins -----
+allowed_csrf_string = os.environ.get('DJANGO_CSRF_TRUSTED_ORIGINS')
+CSRF_TRUSTED_ORIGINS = [host.strip() for host in allowed_csrf_string .split(',')]
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'activity',
+    'core',
+    'dashboard',
+    'storages',
+    'announcement',
 ]
 
 MIDDLEWARE = [
@@ -69,14 +82,57 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'parentinfo.wsgi.application'
 
+# -------- Cloudflare R2 for static and media files -------------- #
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL")  # https://<account_id>.r2.cloudflarestorage.com
+AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "auto")
+AWS_S3_CUSTOM_DOMAIN = os.getenv("AWS_S3_CUSTOM_DOMAIN")
 
-# Database
+# Special parameters For Cloudflare R2
+AWS_S3_ADDRESSING_STYLE = "virtual"      
+AWS_DEFAULT_ACL = None                    
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+AWS_QUERYSTRING_AUTH = False            
+
+# Stream for big files
+#AWS_S3_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+
+
+# Storage Classes
+class StaticStorage(S3Boto3Storage):
+    location = "static" # static folder path on R2
+    default_acl = None
+
+class MediaStorage(S3Boto3Storage):
+    location = "media" # media folder path on R2
+    default_acl = None
+    file_overwrite = False 
+
+STORAGES = {
+    "default": {
+        "BACKEND": "vbs.settings.MediaStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "vbs.settings.StaticStorage",
+    },
+}
+
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+
+# ---------- Database Configuration for PostgreSQL -------------- #
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("PG_DB"),
+        'USER': os.getenv("PG_USER"),
+        'PASSWORD': os.getenv("PG_PASSWORD"),
+        'HOST': os.getenv("PG_HOST"),
+        'PORT': os.getenv("PG_PORT")
     }
 }
 
@@ -110,12 +166,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
