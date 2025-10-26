@@ -14,7 +14,6 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from django.core.management.utils import get_random_secret_key
-from storages.backends.s3boto3 import S3Boto3Storage
 
 load_dotenv()
 
@@ -48,7 +47,6 @@ INSTALLED_APPS = [
     'activity',
     'core',
     'dashboard',
-    'storages',
     'announcement',
 ]
 
@@ -99,43 +97,56 @@ AWS_QUERYSTRING_AUTH = False
 # Stream for big files
 #AWS_S3_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 
+# Optional: sensible default object parameters (cache headers) for static/media
+AWS_S3_OBJECT_PARAMETERS = {
+    "CacheControl": "max-age=86400, must-revalidate",
+}
 
-# Storage Classes
-class StaticStorage(S3Boto3Storage):
-    location = "static" # static folder path on R2
-    default_acl = None
-
-class MediaStorage(S3Boto3Storage):
-    location = "media" # media folder path on R2
-    default_acl = None
-    file_overwrite = False 
-
+# NOTE: We keep storage classes in a separate module to avoid importing boto3
+# (and django-storages) at settings-import time which can break some manage.py
+# commands in environments where those packages are not installed.
 STORAGES = {
     "default": {
-        "BACKEND": "parentinfo.settings.MediaStorage",
+        "BACKEND": "parentinfo.storages.MediaStorage",
     },
     "staticfiles": {
-        "BACKEND": "parentinfo.settings.StaticStorage",
+        "BACKEND": "parentinfo.storages.StaticStorage",
     },
 }
 
-STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
-MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+# Build STATIC_URL / MEDIA_URL safely: prefer a custom domain, fall back to the
+# R2 endpoint, and finally to local paths if neither is provided.
+STATIC_DOMAIN = AWS_S3_CUSTOM_DOMAIN or AWS_S3_ENDPOINT_URL
+if STATIC_DOMAIN:
+    STATIC_DOMAIN = STATIC_DOMAIN.rstrip('/')
+    STATIC_URL = f"https://{STATIC_DOMAIN}/static/"
+    MEDIA_URL = f"https://{STATIC_DOMAIN}/media/"
+else:
+    STATIC_URL = "/static/"
+    MEDIA_URL = "/media/"
 
 # ---------- Database Configuration for PostgreSQL -------------- #
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("PG_DB"),
-        'USER': os.getenv("PG_USER"),
-        'PASSWORD': os.getenv("PG_PASSWORD"),
-        'HOST': os.getenv("PG_HOST"),
-        'PORT': os.getenv("PG_PORT")
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
-
+    
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv("PG_DB"),
+            'USER': os.getenv("PG_USER"),
+            'PASSWORD': os.getenv("PG_PASSWORD"),
+            'HOST': os.getenv("PG_HOST"),
+            'PORT': os.getenv("PG_PORT")
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
