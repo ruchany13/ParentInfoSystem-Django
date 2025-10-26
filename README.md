@@ -20,7 +20,7 @@ The main goal of the application is to provide an efficient and centralized plat
 
 ### 🌐 Live Demo
 You can access the live version of the application here:  
-🔗 [pinfo.ruchan.dev](https://parent-info.ruchan.dev)
+🔗 [demo-parentinfo.ruchan.dev](https://demo-parentinfo.ruchan.dev)
 
 > ⚠️ The admin panel is disabled for security reasons.  
 > Data is static and refreshed weekly.  
