@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY ../parentinfo .
 COPY ../requirements.txt .
-COPY entrypoint-dev.sh .
+COPY Docker/entrypoint-dev.sh .
 # Python buffers logs; this prevents that [behavior], enabling real-time monitoring of logs.
 ENV PYTHONUNBUFFERED=1
 # Prevents Python from compiling code to bytecode; this creates overhead for the additional container in a container architecture
