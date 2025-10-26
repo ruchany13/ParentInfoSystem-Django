@@ -1,7 +1,7 @@
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
-  name: ParentInfoCluster
+  name: parentinfocluster
   annotations:
     argocd.argoproj.io/sync-wave: "2" # Ensure secrets are created before the cluster
   namespace: parentinfo
