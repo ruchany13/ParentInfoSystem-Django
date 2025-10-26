@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ParentInfoApp
+  namespace: parentinfo
+  labels:
+    app: ParentInfoApp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ParentInfoApp
+  template:
+    metadata:
+      labels:
+        app: ParentInfoApp
+    spec:
+      containers:
+      - name: django
+        image: ghcr.io/ruchany13/parentinfo:0.2
+        imagePullPolicy: Always
+        envFrom:
+          - secretRef:
+              name: ParentInfoR2Secret
+          - secretRef:
+              name: ParentInfoDjangoSecret
+          - secretRef:
+              name: ParentInfoPostgresSecret
+        ports:
+        - containerPort: 8000
+      imagePullSecrets:
+        - name: RegistryCredentials
+
