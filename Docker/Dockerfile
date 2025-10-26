@@ -3,7 +3,7 @@ FROM python:3.13
 RUN mkdir /app
 WORKDIR /app
 
-COPY . .
+COPY ../parentinfo .
 
 # Python buffers logs; this prevents that [behavior], enabling real-time monitoring of logs.
 ENV PYTHONUNBUFFERED=1
