@@ -4,6 +4,7 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY ../parentinfo .
+COPY ../requirements.txt .
 
 # Python buffers logs; this prevents that [behavior], enabling real-time monitoring of logs.
 ENV PYTHONUNBUFFERED=1
