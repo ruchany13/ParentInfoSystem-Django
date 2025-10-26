@@ -3,10 +3,10 @@ FROM python:3.13
 RUN mkdir /app
 WORKDIR /app
 
-# Python logları bekletir, bunu engelleyerek logların real time izlenmesi sağlanmaktadır
+
 ENV PYTHONUNBUFFERED=1
-# Python'ın bytecode'a kodu çevirmesini engeller, konteyner mimarisinde ek konteyner için yük oluşturuyor
 ENV PYTHONDONTWRITEBYTECODE=1
+
 COPY . .
 RUN pip install --upgrade pip
 
