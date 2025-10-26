@@ -79,9 +79,9 @@ class InstitutionScopedAdminMixin:
 
 @admin.register(Institution)
 class InstitutionAdmin(admin.ModelAdmin):
-    list_display = ("name", "gender", "address", "manager")
+    list_display = ("name", "address", "manager")
     search_fields = ("name", "address", "manager__username")
-    list_filter = ("gender",)
+    list_filter = ("name",)
 
 
 @admin.register(Student)
