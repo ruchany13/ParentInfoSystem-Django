@@ -1,0 +1,20 @@
+FROM python:3.13
+
+RUN mkdir /app
+WORKDIR /app
+
+# Python logları bekletir, bunu engelleyerek logların real time izlenmesi sağlanmaktadır
+ENV PYTHONUNBUFFERED=1
+# Python'ın bytecode'a kodu çevirmesini engeller, konteyner mimarisinde ek konteyner için yük oluşturuyor
+ENV PYTHONDONTWRITEBYTECODE=1
+COPY . .
+RUN pip install --upgrade pip
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN chmod +x entrypoint.sh
+
+EXPOSE 8000
+ENTRYPOINT ["./entrypoint.sh"]
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "vbs.wsgi:application"]
