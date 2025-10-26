@@ -1,17 +1,9 @@
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
+apiVersion: v1
+kind: Secret
 metadata:
-  name: cnpg-super-user # Name of the superuser secret
+  name: cnpg-super-user
   namespace: parentinfo
-  annotations:
-    sealedsecrets.bitnami.com/namespace-wide: "true"
-spec:
-  encryptedData:
-    password: AgA6V1dgk0Y4IZ2h0VfeR5JFvzSPgSl8gjyxBWwwycw4MOZXdp6ePPsgJpOeAEIEsPsSpEyXkUj5aZLUA7H085YOB0dSQINqOj4U1mMubfp2Hm2FLSHzHQ8vcmKxK72pwtx/a/XPKYqiEUitSggz2Rpe43n1MGrnKeHXdCQyaNaLPZWKda55foYer8HR/+MSxuvkc6J1qBtkwBbDVw3XR/hgnU6Q73u6Up92fI3fsz2EV4oSrE9crBCMCSlLaCxNLe13guHqQ6n6y928OJrTv5QOy7CtWVkCUm5HnXjNVGrLIR9KdEXFvzGM4+K+61nBepnh/LTtk2DVrtsAlCvsckv5GcdrfsuWYb8/CXpv/0gqW8C6KrIdbn8uloKoUc3vJ3lVPdJerDmTWk5jXB+JSqp5HAL0gYlF7rkLNFoxsM/ZLDhfNb2fIiQlL2Zz+BTxysopFaKIfWxGAM4FZGeLEFg/iJE7SP5KTDWe5rKz7CW0cXAmkDO22p0GnrrmBRGvpyZEy7+mdKHO1QN77Ui2uuJawLA/GbEBd6TvHRGSr+QuuC6fNvwLOjf5YFy3Bh5Y0e+mbh0jXEdW2f7pxac2rQolrSelcwDrGYi1Uhb924CCHO5ce9LCftoolW10lhLLeTvjjjdBYYbIkztoO71breeWKgM+mGjnINg1+XOKzhajiXte5uln+z+0GNjuPk2qQOHi27j5EASzUzfv7+bWZS9Y
-    username: AgCw2+B6CLPcfILD9FMRMpyIh4FxCi9Fi5sit0m6O23Jif4wrAPMwMpELvYCqlXshX5ybPwwDXqdjS3NJPNsqIrm6B9AF+LamgZpjWb6kobSZBKyQvycJ7JeSGewdDww2fFlh394eSX5LgmHi2g3cVZ527hzfUdAKlM5JlsehLYUgfUFvnEzyMrNHde9RV5woFJrMBa5PnMvrKZT64H02I/G7xKAO11piipHBKiUUzZQnuUdbJUP1EzB4FDyh4DNdpnLVSngfCcqiPzfqzejcJGmQpJIoluY4x0Fxr+lgkFYFNom7+dhW+gVQkNbKaaV/sWJQZH53XCkSI7urywcJlKn5J2ct3QUjSmvaM3TPCG551ydIA3KmwyC7uUbjpnT8tNMHpDSCt/0uQPdhN0SDab72Tie1qZNdDelJSReQ4G8Z/Ss/B9qWPJ+aJcTWteHLEmHl+jGA6X/oDiFoKtuutQt30Zs9aJrMIzVIgF76FAXjtC2yw+JB/cgCRHSohoE6SXa+dqmG8O5qQtrBCaC7MmY/v/ubObeDB4f5gqljywr87NvNYKgCxFfHR/eCLEE22X06zlS/AprfjDnGsU2VkXMgYTuvOMm9XGbpJlpEd538RZnSPDDt7Tjm+u1OZhAxrV4NT+utaY6a3RdAIEfhlur9tIHNrR3NYxC1EjJxTob1nzGfcP1IJNoOmNzsYz+o4k7uGhISRD4RQ==
-  template:
-    metadata:
-      name: cnpg-super-user
-      namespace: parentinfo
-      annotations:
-        sealedsecrets.bitnami.com/namespace-wide: "true"
+type: Opaque
+stringData:
+  username: super_user
+  password: super_password123
