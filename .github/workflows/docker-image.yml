@@ -8,11 +8,29 @@ on:
 
 jobs:
 
-  build:
-
+  build-and-push-docker-image:
     runs-on: ubuntu-latest
 
+    env:
+      IMAGE_NAME: ghcr.io/ruchany13/parentinfo
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set Image Tag
+      id: vars
+      run: echo "IMAGE_TAG=$(date +'%s')" >> $GITHUB_ENV
+
     - name: Build the Docker image
-      run: docker build . --file Docker/Dockerfile --tag ruchany13/test-parentinfo:$(date +%s)
+      run: docker build . --file Docker/Dockerfile --tag $IMAGE_NAME:$IMAGE_TAG
+    
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3.6.0
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Push the Docker image
+      run: docker push $IMAGE_NAME:$IMAGE_TAG
