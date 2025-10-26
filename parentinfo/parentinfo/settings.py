@@ -112,10 +112,10 @@ class MediaStorage(S3Boto3Storage):
 
 STORAGES = {
     "default": {
-        "BACKEND": "vbs.settings.MediaStorage",
+        "BACKEND": "parentinfo.settings.MediaStorage",
     },
     "staticfiles": {
-        "BACKEND": "vbs.settings.StaticStorage",
+        "BACKEND": "parentinfo.settings.StaticStorage",
     },
 }
 
