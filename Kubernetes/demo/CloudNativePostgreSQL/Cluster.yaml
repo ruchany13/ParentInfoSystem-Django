@@ -15,7 +15,7 @@ spec:
 
   bootstrap:
     initdb:
-      database: app # Initial database name
+      database: app # Initial database name also used for application
       owner: app # Owner of the initial database
       secret:
         name: cnpg-app-user
