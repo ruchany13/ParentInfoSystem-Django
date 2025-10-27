@@ -45,4 +45,4 @@ jobs:
         sudo chmod +x /usr/bin/yq
     - name: Update Kubernetes deployment file with new image tag
       run: |
-        yq e '.spec.template.spec.containers[0].image = "'$IMAGE_NAME':'$IMAGE_TAG'"' -i Kubernetes/demo/parentinfo-app/deployment.yaml
+        yq e '.spec.template.spec.containers[0].image = "'$IMAGE_NAME':'$IMAGE_TAG'"' -i Kubernetes/demo/parentinfo-app/Deployment.yaml
