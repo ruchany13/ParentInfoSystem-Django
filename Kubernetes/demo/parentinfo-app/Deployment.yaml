@@ -16,18 +16,17 @@ spec:
         app: parentinfo-app
     spec:
       containers:
-      - name: django
-        image: ghcr.io/ruchany13/parentinfo:0.2
-        imagePullPolicy: Always
-        envFrom:
-          - secretRef:
-              name: parentinfo-r2-secret
-          - secretRef:
-              name: parentinfo-django-secret
-          - secretRef:
-              name: parentinfo-postgres-secret
-        ports:
-        - containerPort: 8000
+        - name: django
+          image: ghcr.io/ruchany13/parentinfo:1761548086
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: parentinfo-r2-secret
+            - secretRef:
+                name: parentinfo-django-secret
+            - secretRef:
+                name: parentinfo-postgres-secret
+          ports:
+            - containerPort: 8000
       imagePullSecrets:
         - name: registry-credentials
-
