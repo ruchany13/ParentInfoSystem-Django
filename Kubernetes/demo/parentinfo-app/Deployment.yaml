@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: django
-          image: ghcr.io/ruchany13/parentinfo:1761548086
+          image: ghcr.io/ruchany13/parentinfo:1761548990
           imagePullPolicy: Always
           envFrom:
             - secretRef:
