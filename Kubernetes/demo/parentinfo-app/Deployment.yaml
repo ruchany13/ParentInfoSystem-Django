@@ -6,7 +6,7 @@ metadata:
   labels:
     app: parentinfo-app
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: parentinfo-app
